@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LKR Miner | Hamster Style</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --primary: #00d2ff;
+            --accent: #f39c12;
+            --text: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top, #1a2a6c, #b21f1f, #fdbb2d);
+            background-attachment: fixed;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Container */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .tab {
+            color: #888;
+            font-size: 12px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .tab.active { color: var(--primary); }
+        .tab i { display: block; font-size: 20px; margin-bottom: 5px; }
+
+        /* Mining Section */
+        #tap-button {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: url('https://cdn-icons-png.flaticon.com/512/6828/6828640.png') center/cover;
+            border: 8px solid var(--glass-border);
+            margin: 20px auto;
+            cursor: pointer;
+            transition: transform 0.1s;
+            box-shadow: 0 0 30px var(--primary);
+        }
+
+        #tap-button:active { transform: scale(0.95); }
+
+        .flag-icon { width: 30px; vertical-align: middle; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        /* Hidden Sections */
+        .page-content { display: none; padding-bottom: 80px; width: 100%; }
+        .page-content.active { display: block; animation: fadeIn 0.5s; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        button.btn-action {
+            background: linear-gradient(45deg, var(--primary), #3a7bd5);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="auth-page" class="glass-card" style="margin-top: 100px;">
+        <h2 style="margin-bottom: 5px;">Welcome Miner</h2>
+        <p style="font-size: 0.8em; margin-bottom: 20px;">Sri Lanka's #1 LKR Mining Site <img src="https://flagcdn.com/w20/lk.png" class="flag-icon" alt="SL Flag"></p>
+        <input type="text" placeholder="Mobile Number" style="width: 80%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none;">
+        <input type="password" placeholder="Password" style="width: 80%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none;">
+        <div>
+            <input type="checkbox" id="remember"> <label for="remember">Remember Me</label>
+        </div>
+        <button class="btn-action" onclick="login()">Login / Register</button>
+    </div>
+
+    <div id="main-app" style="display: none; width: 100%;">
+        
+        <div id="home" class="page-content active">
+            <div class="glass-card" style="margin: 20px auto;">
+                <p>Welcome, <span id="user-mobile">071***</span></p>
+                <h1 id="balance">0.00000 LKR</h1>
+                <div id="tap-button" onclick="handleTap()"></div>
+                <div class="stats-grid">
+                    <div class="stat-item">Profit/Day<br><span id="daily-profit">0 LKR</span></div>
+                    <div class="stat-item">Timer<br><span id="timer">23:59:59</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="vip" class="page-content">
+            <div class="glass-card" style="margin: 20px auto;">
+                <h3>VIP Levels</h3>
+                <div class="stat-item" style="margin-bottom: 10px; text-align: left;">
+                    <b>Level 1: 300 LKR</b><br>Profit: 10/day | Tap: 0.0001
+                    <button class="btn-action" style="padding: 5px;">Invest</button>
+                </div>
+                <div class="stat-item" style="margin-bottom: 10px; text-align: left;">
+                    <b>Level 2: 500 LKR</b><br>Profit: 25/day | Tap: 0.001
+                    <button class="btn-action" style="padding: 5px;">Invest</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="payout" class="page-content">
+            <div class="glass-card" style="margin: 20px auto;">
+                <h3>Deposit & Withdraw</h3>
+                <p>Admin: N.V. Minsara</p>
+                <p>Bank: Commercial Bank</p>
+                <p>Acc: 8020510080</p>
+                <button class="btn-action" onclick="window.open('https://wa.me/94723905537')">Deposit via WhatsApp</button>
+                <hr style="margin: 20px 0; border: 0.5px solid var(--glass-border);">
+                <input type="number" placeholder="Withdraw Amount (Min 500)" style="width: 80%; padding: 10px; border-radius: 5px; border: none;">
+                <button class="btn-action" onclick="window.open('https://wa.me/94723905537?text=I want to withdraw')">Withdraw</button>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <div class="tab active" onclick="showPage('home')"><i class="fas fa-home"></i>Home</div>
+            <div class="tab" onclick="showPage('vip')"><i class="fas fa-crown"></i>VIP</div>
+            <div class="tab" onclick="showPage('task')"><i class="fas fa-tasks"></i>Tasks</div>
+            <div class="tab" onclick="showPage('team')"><i class="fas fa-users"></i>Team</div>
+            <div class="tab" onclick="showPage('payout')"><i class="fas fa-wallet"></i>Payout</div>
+        </div>
+    </div>
+
+    <script>
+        let balance = 0.0;
+        let tapValue = 0.00001;
+
+        function login() {
+            document.getElementById('auth-page').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+        }
+
+        function handleTap() {
+            balance += tapValue;
+            document.getElementById('balance').innerText = balance.toFixed(5) + " LKR";
+            
+            // Simple tap animation
+            const btn = document.getElementById('tap-button');
+            btn.style.transform = 'scale(0.98)';
+            setTimeout(() => btn.style.transform = 'scale(1)', 100);
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // 24 Hour Timer Logic
+        let timeLeft = 86400;
+        setInterval(() => {
+            if(timeLeft > 0) {
+                timeLeft--;
+                let hrs = Math.floor(timeLeft / 3600);
+                let mins = Math.floor((timeLeft % 3600) / 60);
+                let secs = timeLeft % 60;
+                document.getElementById('timer').innerText = `${hrs}:${mins}:${secs}`;
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
